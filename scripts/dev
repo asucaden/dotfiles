@@ -1,0 +1,28 @@
+#!/bin/bash
+
+SESSION="dev"
+
+# Check if the session already exists
+tmux has-session -t $SESSION 2>/dev/null
+
+if [ $? != 0 ]; then
+  # Create session and set up layout
+  tmux new-session -d -s $SESSION -c "$PWD"
+
+  # Split bottom pane
+  tmux split-window -v -t $SESSION -c "$PWD"
+
+  # Shrink the bottom pane
+  tmux resize-pane -D -t $SESSION:0.0 10
+
+
+  # Split top-left horizontally
+  tmux select-pane -t $SESSION:0.0
+  tmux split-window -h -t $SESSION -c "$PWD"
+
+  # Focus pane on the top left
+  tmux select-pane -t $SESSION:0.0
+fi
+
+# Attach to session
+tmux attach -t $SESSION

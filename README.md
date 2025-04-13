@@ -19,3 +19,12 @@ git clone https://github.com/cadenmidkiff/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
+
+## 🧪 Optional: Add the `dev` alias
+
+To open a tmux session with your preferred layout in the current directory, add this alias:
+
+```bash
+echo 'alias dev="~/dotfiles/scripts/dev"' >> ~/.zshrc
+source ~/.zshrc
+```
