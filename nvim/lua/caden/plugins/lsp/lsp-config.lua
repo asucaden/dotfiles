@@ -133,13 +133,13 @@ return {
 				return
 			end
 
-			-- Use lspconfig's metatable to load servers; only warn if truly unknown
-			local server = rawget(lspconfig, server_name)
-			if not server then
+			-- Use lspconfig's metatable so servers auto-load on first access
+			local server = lspconfig[server_name]
+			if server and server.setup then
+				server.setup(opts)
+			else
 				vim.notify(("lspconfig: server '%s' not found, skipping setup."):format(server_name), vim.log.levels.WARN)
-				return
 			end
-			server.setup(opts)
 		end
 
 		if mason_lspconfig.setup_handlers then
