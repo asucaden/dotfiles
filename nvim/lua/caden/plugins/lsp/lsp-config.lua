@@ -72,7 +72,11 @@ return {
 		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
-			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+			local ok = pcall(vim.fn.sign_define, hl, { text = icon, texthl = hl, numhl = "" })
+			if not ok then
+				-- fallback to plain letters if custom glyphs fail
+				pcall(vim.fn.sign_define, hl, { text = type:sub(1, 1), texthl = hl, numhl = "" })
+			end
 		end
 
 		local server_settings = {
