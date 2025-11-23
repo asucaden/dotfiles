@@ -1,6 +1,5 @@
 return {
 	"neovim/nvim-lspconfig",
-	version = "0.1.7",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
@@ -8,9 +7,6 @@ return {
 		{ "folke/neodev.nvim", opts = {} },
 	},
 	config = function()
-		-- import lspconfig plugin
-		local lspconfig = require("lspconfig")
-
 		-- import mason_lspconfig plugin
 		local mason_lspconfig = require("mason-lspconfig")
 
@@ -125,34 +121,45 @@ return {
 			ts_ls = true, -- legacy name; use tsserver
 		}
 
+		local servers = {
+			"tsserver",
+			"html",
+			"cssls",
+			"tailwindcss",
+			"svelte",
+			"lua_ls",
+			"graphql",
+			"emmet_ls",
+			"prismals",
+			"pyright",
+			"gopls",
+			"jdtls",
+			"clangd",
+			"hls",
+			"biome",
+		}
+
 		local function setup_server(server_name)
-			local opts = { capabilities = capabilities }
-			if server_settings[server_name] then
-				opts = vim.tbl_deep_extend("force", opts, server_settings[server_name])
-			end
 			if invalid_servers[server_name] then
 				return
 			end
 
-			-- Use lspconfig's metatable so servers auto-load on first access
-			local server = lspconfig[server_name]
-			if server and server.setup then
-				server.setup(opts)
-			else
-				vim.notify(("lspconfig: server '%s' not found, skipping setup."):format(server_name), vim.log.levels.WARN)
+			local opts = vim.tbl_deep_extend("force", { capabilities = capabilities }, server_settings[server_name] or {})
+
+			local ok_config, err_config = pcall(vim.lsp.config, server_name, opts)
+			if not ok_config then
+				vim.notify(("lspconfig: failed config for '%s': %s"):format(server_name, err_config), vim.log.levels.WARN)
+				return
+			end
+
+			local ok_enable, err_enable = pcall(vim.lsp.enable, server_name)
+			if not ok_enable then
+				vim.notify(("lspconfig: failed enable for '%s': %s"):format(server_name, err_enable), vim.log.levels.WARN)
 			end
 		end
 
-		if mason_lspconfig.setup_handlers then
-			mason_lspconfig.setup_handlers({
-				function(server_name)
-					setup_server(server_name)
-				end,
-			})
-		else
-			for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
-				setup_server(server_name)
-			end
+		for _, server in ipairs(servers) do
+			setup_server(server)
 		end
 	end,
 }
