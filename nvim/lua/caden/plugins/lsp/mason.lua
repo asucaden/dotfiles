@@ -59,6 +59,8 @@ return {
 				"pylint",
 				"eslint_d",
 			},
+			run_on_start = true,
+			auto_update = false,
 		})
 	end,
 }
