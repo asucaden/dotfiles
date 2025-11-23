@@ -9,6 +9,7 @@ return {
 	config = function()
 		-- import lspconfig plugin
 		local lspconfig = require("lspconfig")
+		local lspconfigs = require("lspconfig.configs")
 
 		-- import mason_lspconfig plugin
 		local mason_lspconfig = require("mason-lspconfig")
@@ -133,13 +134,12 @@ return {
 				return
 			end
 
-			-- Avoid triggering lspconfig's __index warnings for unknown names
-			local server = rawget(lspconfig, server_name)
-			if not server then
+			-- Ensure the server exists in lspconfig before setup
+			if not lspconfigs[server_name] then
 				vim.notify(("lspconfig: server '%s' not found, skipping setup."):format(server_name), vim.log.levels.WARN)
 				return
 			end
-			server.setup(opts)
+			lspconfig[server_name].setup(opts)
 		end
 
 		if mason_lspconfig.setup_handlers then
