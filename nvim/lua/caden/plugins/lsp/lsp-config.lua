@@ -120,12 +120,22 @@ return {
 		}
 
 		-- mason-lspconfig recently removed setup_handlers; support both new and old shapes.
+		local invalid_servers = {
+			stylua = true, -- formatter, not an LSP
+			ts_ls = true, -- legacy name; use tsserver
+		}
+
 		local function setup_server(server_name)
 			local opts = { capabilities = capabilities }
 			if server_settings[server_name] then
 				opts = vim.tbl_deep_extend("force", opts, server_settings[server_name])
 			end
-			local server = lspconfig[server_name]
+			if invalid_servers[server_name] then
+				return
+			end
+
+			-- Avoid triggering lspconfig's __index warnings for unknown names
+			local server = rawget(lspconfig, server_name)
 			if not server then
 				vim.notify(("lspconfig: server '%s' not found, skipping setup."):format(server_name), vim.log.levels.WARN)
 				return

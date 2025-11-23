@@ -42,7 +42,6 @@ return {
 				"query",
 				"sql",
 				"svelte",
-				"tailwindcss",
 				"tsx",
 				"typescript",
 				"vim",
