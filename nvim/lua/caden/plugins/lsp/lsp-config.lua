@@ -1,5 +1,6 @@
 return {
 	"neovim/nvim-lspconfig",
+	version = "0.1.7",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
@@ -124,7 +125,12 @@ return {
 			if server_settings[server_name] then
 				opts = vim.tbl_deep_extend("force", opts, server_settings[server_name])
 			end
-			lspconfig[server_name].setup(opts)
+			local server = lspconfig[server_name]
+			if not server then
+				vim.notify(("lspconfig: server '%s' not found, skipping setup."):format(server_name), vim.log.levels.WARN)
+				return
+			end
+			server.setup(opts)
 		end
 
 		if mason_lspconfig.setup_handlers then
