@@ -134,11 +134,10 @@ return {
 		-- mason-lspconfig recently removed setup_handlers; support both new and old shapes.
 		local invalid_servers = {
 			stylua = true, -- formatter, not an LSP
-			ts_ls = true, -- legacy name; use tsserver
 		}
 
 		local servers = {
-			"tsserver",
+			"ts_ls",
 			"html",
 			"cssls",
 			"tailwindcss",
