@@ -40,9 +40,10 @@ return {
 				"gopls",
 				"jdtls",
 				"clangd",
-				"hls",
 			},
-			automatic_installation = true,
+			automatic_installation = {
+				exclude = { "hls" }, -- use Homebrew HLS, not Mason
+			},
 		})
 
 		mason_tool_installer.setup({

@@ -105,6 +105,18 @@ return {
 					"svelte",
 				},
 			},
+			hls = (function()
+				local cmd = { "haskell-language-server-wrapper", "--lsp" }
+				if vim.fn.executable(cmd[1]) ~= 1 then
+					local mason_hls = vim.fn.stdpath("data") .. "/mason/bin/haskell-language-server-wrapper"
+					if vim.fn.executable(mason_hls) == 1 then
+						cmd[1] = mason_hls
+					else
+						vim.notify("hls: no executable haskell-language-server-wrapper found on PATH or Mason", vim.log.levels.WARN)
+					end
+				end
+				return { cmd = cmd }
+			end)(),
 			lua_ls = {
 				settings = {
 					Lua = {
