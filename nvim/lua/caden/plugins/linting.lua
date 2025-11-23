@@ -34,15 +34,19 @@ return {
 
 		local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 
+		local function try_lint_safely()
+			lint.try_lint(nil, { ignore_errors = true })
+		end
+
 		vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 			group = lint_augroup,
 			callback = function()
-				lint.try_lint()
+				try_lint_safely()
 			end,
 		})
 
 		vim.keymap.set("n", "<leader>l", function()
-			lint.try_lint()
+			try_lint_safely()
 		end, { desc = "Trigger linting for current file" })
 	end,
 }

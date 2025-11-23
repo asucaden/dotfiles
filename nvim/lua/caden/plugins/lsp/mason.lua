@@ -27,7 +27,7 @@ return {
 		mason_lspconfig.setup({
 			-- list of servers for mason to install
 			ensure_installed = {
-				"ts_ls",
+				"tsserver",
 				"html",
 				"cssls",
 				"tailwindcss",
@@ -39,7 +39,6 @@ return {
 				"pyright",
 				"gopls",
 				"jdtls",
-				"biome",
 				"clangd",
 				"hls",
 			},
@@ -53,6 +52,9 @@ return {
 				"black", -- python formatter
 				"goimports",
 				"google-java-format",
+				"biome",
+				"checkstyle",
+				"cpplint",
 
 				"pylint",
 				"eslint_d",
